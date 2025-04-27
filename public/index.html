@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Aggregator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📰 News Aggregator</h1>
+        <form id="searchForm">
+            <input type="text" id="searchInput" placeholder="Search for news..." />
+            <button type="submit">Search</button>
+        </form>
+        <div id="newsContainer"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('searchForm');
+        const newsContainer = document.getElementById('newsContainer');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('searchInput').value;
+            const res = await fetch(`/news?q=${query}`);
+            const articles = await res.json();
+
+            newsContainer.innerHTML = articles.map(article => `
+                <div class="news">
+                    <h2>${article.title}</h2>
+                    <p>${article.description || 'No description available.'}</p>
+                    <a href="${article.url}" target="_blank">Read more</a>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>
